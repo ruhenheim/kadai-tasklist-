@@ -1,11 +1,23 @@
 <% if logged_in? %>
   <p>ログイン完了ユーザ: <%= current_user.name %></p>
-<% else %>
   <div class="row">
     <aside class="col-md-4">
       <%= form_for(@task) do |f| %>
+        <% if f.object.errors.any? %>
+          <div class="alert alert-warning" id="error_explanation">
+            <h4><%= pluralize(f.object.errors.count, "error") %> 以下の原因を修正してください: </h4>
+            <ul>
+            <% f.object.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+            </ul>
+          </div>
+        <% end %>
         <div class="form-group">
           <%= f.text_area :content, class: 'form-control', rows: 5 %>
+        </div>
+        <div class="form-group">
+          <%= f.text_field :status, class: 'form-control' %>
         </div>
         <%= f.submit 'Post', class: 'btn btn-primary btn-block' %>
       <% end %>
@@ -14,10 +26,11 @@
       <%= render 'tasks/tasks', tasks: @tasks %>
     </div>
   </div>
-   <div class="center jumbotron">
+<% else %>
+  <div class="center jumbotron">
     <div class="text-center">
       <h1>Welcome to the Tasks</h1>
       <%= link_to 'Sign up now!', signup_path, class: 'btn btn-lg btn-primary' %>
     </div>
-   </div>
+  </div>
 <% end %>
